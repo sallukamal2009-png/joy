@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +85,7 @@ button {
     color: #800f2f;
 }
 
+/* floating NO (not clickable) */
 #no {
     position: absolute;
     padding: 12px 28px;
@@ -94,18 +94,16 @@ button {
     border-radius: 40px;
     font-weight: bold;
     font-size: 1.1rem;
-    pointer-events: none;   /* 🚫 NOT CLICKABLE */
+    pointer-events: none;
     z-index: 9999;
     animation: float 2.5s ease-in-out infinite;
 }
 
-/* gentle floating motion */
 @keyframes float {
     0%   { transform: translateY(0); }
     50%  { transform: translateY(-8px); }
     100% { transform: translateY(0); }
 }
-
 
 /* 💝 Final Screen */
 #final {
@@ -144,42 +142,80 @@ button {
 
 <body>
 
-<!-- 🎶 Music -->
+<!-- 🎶 Music (plays after YES click) -->
 <audio id="bgMusic" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c0c46dfc6.mp3" type="audio/mpeg">
 </audio>
 
 <!-- ✨ Sparkles -->
 <script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const music = document.getElementById("bgMusic");
+for (let i = 0; i < 80; i++) {
+    const s = document.createElement("div");
+    s.className = "sparkle";
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.animationDelay = Math.random() * 6 + "s";
+    s.style.opacity = Math.random();
+    document.body.appendChild(s);
+}
+</script>
 
-/* initial position */
-noBtn.style.left = "180px";
-noBtn.style.top = "10px";
+<!-- 💘 Proposal -->
+<div class="card" id="proposal">
+    <h1>Hey <span class="name">My Love</span> 💕</h1>
+    <p>Will you be my Valentine?</p>
 
-/* auto-floating NO (no interaction needed) */
-setInterval(() => {
-    const container = document.querySelector(".buttons");
-    const rect = container.getBoundingClientRect();
+    <div class="buttons">
+        <button id="yes">Yes 💖</button>
+        <div id="no">No 🙈</div>
+    </div>
+</div>
 
-    const maxX = rect.width - noBtn.offsetWidth;
-    const maxY = rect.height - noBtn.offsetHeight;
+<!-- 💝 Final -->
+<div class="card" id="final">
+    <div class="photo-frame">
+        <img src="images/her.jpg" alt="My Valentine">
+    </div>
+    <h1>Thank you for choosing me 💘</h1>
+    <p>
+        You are officially my Valentine 🌹<br>
+        And my heart belongs to you ❤️
+    </p>
+</div>
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+<!-- ✅ FINAL SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const music = document.getElementById("bgMusic");
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}, 1500);
+    /* initial position */
+    noBtn.style.left = "180px";
+    noBtn.style.top = "10px";
 
-/* YES button */
-yesBtn.addEventListener("click", () => {
-    music.play().catch(()=>{});
-    document.getElementById("proposal").style.display = "none";
-    document.getElementById("final").style.display = "block";
+    /* auto move NO */
+    setInterval(() => {
+        const container = document.querySelector(".buttons");
+        const rect = container.getBoundingClientRect();
+
+        const maxX = rect.width - noBtn.offsetWidth;
+        const maxY = rect.height - noBtn.offsetHeight;
+
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }, 1500);
+
+    /* YES click */
+    yesBtn.addEventListener("click", () => {
+        music.play().catch(()=>{});
+        document.getElementById("proposal").style.display = "none";
+        document.getElementById("final").style.display = "block";
+    });
 });
 </script>
 
-
+</body>
+</html>
