@@ -87,11 +87,25 @@ button {
 }
 
 #no {
-   background: #800f2f;
-    color: white;
     position: absolute;
-    z-index: 9999;  
+    padding: 12px 28px;
+    background: #800f2f;
+    color: white;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    pointer-events: none;   /* 🚫 NOT CLICKABLE */
+    z-index: 9999;
+    animation: float 2.5s ease-in-out infinite;
 }
+
+/* gentle floating motion */
+@keyframes float {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
+}
+
 
 /* 💝 Final Screen */
 #final {
@@ -137,60 +151,32 @@ button {
 
 <!-- ✨ Sparkles -->
 <script>
-for(let i=0;i<80;i++){
-    let s=document.createElement("div");
-    s.className="sparkle";
-    s.style.left=Math.random()*100+"vw";
-    s.style.animationDelay=Math.random()*6+"s";
-    s.style.opacity=Math.random();
-    document.body.appendChild(s);
-}
-</script>
-
-<!-- 💘 Proposal -->
-<div class="card" id="proposal">
-    <h1>Hey <span class="name">My Love</span> 💕</h1>
-    <p>Will you be my Valentine?</p>
-
-    <div class="buttons">
-        <button id="yes">Yes 💖</button>
-        <button id="no">No 🙈</button>
-    </div>
-</div>
-
-<!-- 💝 Final -->
-<div class="card" id="final">
-    <div class="photo-frame">
-       <img src="images/her.jpg" alt="My Valentine">
-    </div>
-    <h1>Thank you for choosing me 💘</h1>
-    <p>You are officially my Valentine 🌹<br>And my heart belongs to you ❤️</p>
-</div>
-
-<!-- ✅ FINAL JS (ONE PLACE ONLY) -->
-<script>
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 const music = document.getElementById("bgMusic");
 
-/* 🏃 Move NO button */
-function moveNo(e){
-    e.preventDefault();
+/* initial position */
+noBtn.style.left = "180px";
+noBtn.style.top = "10px";
 
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+/* auto-floating NO (no interaction needed) */
+setInterval(() => {
+    const container = document.querySelector(".buttons");
+    const rect = container.getBoundingClientRect();
+
+    const maxX = rect.width - noBtn.offsetWidth;
+    const maxY = rect.height - noBtn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-}
+}, 1500);
 
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("mousedown", moveNo);
-noBtn.addEventListener("touchstart", moveNo, { passive:false });
-
-/* 🎶 Music + transition on YES */
+/* YES button */
 yesBtn.addEventListener("click", () => {
-    music.play();   // ✅ GUARANTEED to work
+    music.play().catch(()=>{});
     document.getElementById("proposal").style.display = "none";
     document.getElementById("final").style.display = "block";
 });
